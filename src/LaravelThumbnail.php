@@ -15,7 +15,7 @@ class LaravelThumbnail
         $path = ltrim($path, "/");
 
         //if path exists and is image
-        if(File::exists(public_path("{$images_path}/" . $path))){
+        if(File::exists(public_path("{$images_path}/" . $path)) && !File::isDirectory(public_path("{$images_path}/" . $path))){
 
             $allowedMimeTypes = ['image/jpeg', 'image/gif', 'image/png'];
             $contentType = mime_content_type(public_path("{$images_path}/" . $path));
@@ -82,8 +82,12 @@ class LaravelThumbnail
             $width = is_null($width) ? 400 : $width;
             $height = is_null($height) ? 400 : $height;
 
-            // returns an image placeholder generated from placehold.it
-            return "http://placehold.it/{$width}x{$height}";
+            if( !File::exists( public_path( config("thumb.default_img") ) ) ){
+              // returns an image placeholder generated from placehold.it
+              return "http://placehold.it/{$width}x{$height}";
+            }else{
+              return asset( config("thumb.default_img") );
+            }
         }
     }
 }
