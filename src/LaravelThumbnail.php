@@ -45,7 +45,7 @@ class LaravelThumbnail
                         $image->resize($width, $height);
                     }
                     case "background": {
-                        $image->resize($width, $height, function ($constraint) {
+                        $image->encode('png')->resize($width, $height, function ($constraint) {
                             //keeps aspect ratio and sets black background
                             $constraint->aspectRatio();
                             $constraint->upsize();
@@ -64,11 +64,17 @@ class LaravelThumbnail
                     File::makeDirectory(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $dir_path), 0775, true);
                 }
 
-                //Save the thumbnail
-                $image->save(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path));
+                $filename = "{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path;
+                //remove extension;
+                $filename = substr($filename, 0 , (strrpos($filename, ".")));
+                //add png extension
+                $filename = $filename.'.png';
+
+                //Save the thumbnail, encoded as ong
+                $image->save(public_path($filename), 80, 'png');
 
                 //return the url of the thumbnail
-                return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path);
+                return url($filename);
 
             } else {
                 $width = is_null($width) ? 400 : $width;
