@@ -13,7 +13,6 @@ class LaravelThumbnail
     {
         $images_path = config('thumb.images_path');
         $path = ltrim($path, "/");
-
         //if path exists and is image
         if(File::exists(public_path("{$images_path}/" . $path)) && !File::isDirectory(public_path("{$images_path}/" . $path))){
 
@@ -27,28 +26,26 @@ class LaravelThumbnail
                 }
 
                 //remove extension;
-                $path = substr($path, 0 , (strrpos($path, ".")));
+                $pngPath = substr($path, 0 , (strrpos($path, ".")));
                 //add png extension
-                $path = $path.'.png';
+                $pngPath = $pngPath.'.png';
 
                 //if thumbnail exist returns it
-                if (File::exists(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path))) {
-
-                    return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path);
+                if (File::exists(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath))) {
+                  return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath);
                 }
-
 
                 $image = Image::make(public_path("{$images_path}/" . $path));
 
                 switch ($type) {
                     case "fit": {
-                        $image->fit($width, $height, function ($constraint) {
+                        $image->encode('png')->fit($width, $height, function ($constraint) {
                         });
                         break;
                     }
                     case "resize": {
                         //stretched
-                        $image->resize($width, $height);
+                        $image->encode('png')->resize($width, $height);
                     }
                     case "background": {
                         $image->encode('png')->resize($width, $height, function ($constraint) {
@@ -58,7 +55,7 @@ class LaravelThumbnail
                         });
                     }
                     case "resizeCanvas": {
-                        $image->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'); //gets the center part
+                        $image->encode('png')->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'); //gets the center part
                     }
                 }
 
@@ -71,10 +68,10 @@ class LaravelThumbnail
                 }
 
                 //Save the thumbnail, encoded as ong
-                $image->save(public_path("{$images_path}/" . $path), 80, 'png');
+                $image->save(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath), 80, 'png');
 
                 //return the url of the thumbnail
-                return url("{$images_path}/" . $path);
+                return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath);
 
             } else {
                 $width = is_null($width) ? 400 : $width;

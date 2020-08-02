@@ -9,7 +9,7 @@
       "homepage": "http://leartgjoni.com"
     }
   ],
-  "version": "1.0.3",
+  "version": "1.0.4",
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
