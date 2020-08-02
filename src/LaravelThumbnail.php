@@ -39,23 +39,23 @@ class LaravelThumbnail
 
                 switch ($type) {
                     case "fit": {
-                        $image->encode('png')->fit($width, $height, function ($constraint) {
+                        $image->fit($width, $height, function ($constraint) {
                         });
                         break;
                     }
                     case "resize": {
                         //stretched
-                        $image->encode('png')->resize($width, $height);
+                        $image->resize($width, $height);
                     }
                     case "background": {
-                        $image->encode('png')->resize($width, $height, function ($constraint) {
+                        $image->resize($width, $height, function ($constraint) {
                             //keeps aspect ratio and sets black background
                             $constraint->aspectRatio();
                             $constraint->upsize();
                         });
                     }
                     case "resizeCanvas": {
-                        $image->encode('png')->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'); //gets the center part
+                        $image->resizeCanvas($width, $height, 'center', false, 'rgba(0, 0, 0, 0)'); //gets the center part
                     }
                 }
 
