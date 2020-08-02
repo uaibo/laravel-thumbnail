@@ -26,8 +26,14 @@ class LaravelThumbnail
                     return url("{$images_path}/" . $path);
                 }
 
+                //remove extension;
+                $path = substr($path, 0 , (strrpos($path, ".")));
+                //add png extension
+                $path = $path.'.png';
+
                 //if thumbnail exist returns it
                 if (File::exists(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path))) {
+
                     return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path);
                 }
 
@@ -64,17 +70,11 @@ class LaravelThumbnail
                     File::makeDirectory(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $dir_path), 0775, true);
                 }
 
-                $filename = "{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $path;
-                //remove extension;
-                $filename = substr($filename, 0 , (strrpos($filename, ".")));
-                //add png extension
-                $filename = $filename.'.png';
-
                 //Save the thumbnail, encoded as ong
-                $image->save(public_path($filename), 80, 'png');
+                $image->save(public_path("{$images_path}/" . $path), 80, 'png');
 
                 //return the url of the thumbnail
-                return url($filename);
+                return url("{$images_path}/" . $path);
 
             } else {
                 $width = is_null($width) ? 400 : $width;
