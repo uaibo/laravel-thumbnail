@@ -60,7 +60,7 @@ class LaravelThumbnail
                 }
 
                 //relative directory path starting from main directory of images
-                $dir_path = (dirname($path) == '.') ? "" : dirname($path);
+                $dir_path = (dirname($pngPath) == '.') ? "" : dirname($pngPath);
 
                 //Create the directory if it doesn't exist
                 if (!File::exists(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $dir_path))) {
@@ -68,7 +68,7 @@ class LaravelThumbnail
                 }
 
                 //Save the thumbnail, encoded as ong
-                $image->save(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath), 80, 'png');
+                $image->save(public_path("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath));
 
                 //return the url of the thumbnail
                 return url("{$images_path}/thumbs/" . "{$width}x{$height}_{$type}/" . $pngPath);
